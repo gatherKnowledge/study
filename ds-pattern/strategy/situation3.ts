@@ -1,3 +1,4 @@
+// 동적으로 해결 전략을 변경할 수 있는 스타일
 interface Attakable { weapon: string, attack: Function; };
 
 class SwingAttack implements Attakable {
@@ -44,42 +45,31 @@ class Monster {
   weapon: string;
   attackAble: Attakable;
 
-  constructor(skin: string, attackAble: Attakable) {
+  constructor(skin: string) {
     this.skin = skin;
+  }
+
+  setAttackable(attackAble: Attakable) {
     this.attackAble = attackAble;
     this.weapon = this.attackAble.weapon;
   }
 
-  // Monster범주에 속하는 모든 것들의 공격은 activeAttack으로 통일
   activeAttack(): void {
-    this.attackAble.attack();
+    if (this.attackAble) {
+      this.attackAble.attack();
+    }
   }
 }
 
 class OrcNoArm extends Monster {
-  constructor(s: string = 'green', w: string = 'arm') {
+  constructor(s: string = 'green') {
+    super(s);
     const at: Attakable = new NoActionAttack('arm');
-    super(s, at);
-  }
-}
-
-class OrcArcher extends Monster {
-  constructor() {
-    const attackAble = new ShotAttack('arm');
-    super('green', attackAble);
-  }
-}
-
-class OrcGunner extends Monster {
-  constructor() {
-    const attackAble = new ShotAttack('arm');
-    super('green', attackAble);
+    this.setAttackable(at);
   }
 }
 
 const noArmOrc = new OrcNoArm();
 noArmOrc.activeAttack();
-const orcArcher = new OrcArcher();
-orcArcher.activeAttack();
-const orcGunner = new OrcGunner();
-orcGunner.activeAttack();
+noArmOrc.setAttackable(new ShotAttack('bow'));
+noArmOrc.activeAttack();

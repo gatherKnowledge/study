@@ -36,6 +36,7 @@ class OrcGunner extends Monster {
   constructor(s: string = 'green', w: string = 'arm') {
     super(s, w);
   }
+  // OrcArcher와 동일한 
   attack() {
     console.log(`${this.weapon} shot!`);
   }
